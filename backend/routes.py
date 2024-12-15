@@ -46,11 +46,8 @@ def configure_routes(app):
 
     @app.route("/delete/<int:note_id>")
     def delete(note_id):
-        if "user_id" not in session:
-            return redirect(url_for("login"))
-        
-        user_id = session["user_id"]
-        delete_note(note_id, user_id)
+        # Delete the note without checking if the note belongs to the current user
+        delete_note(note_id)  # No user validation, deletes any note by ID
         return redirect(url_for("notes"))
 
     @app.route("/logout")

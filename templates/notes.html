@@ -1,14 +1,14 @@
 {% extends 'index.html' %}
 {% block content %}
 <h2>Your Notes</h2>
-<form method="POST">
+<form method="POST"> <!-- CSFR Vulnerability --> 
     <textarea name="note" rows="3" placeholder="Write your note here..." required></textarea>
     <button type="submit">Add Note</button>
 </form>
 <ul>
     {% for note in notes %}
     <li>
-        {{ note.note }} - {{ note.created_at }}
+        {{ note.note | safe }}  <!-- XSS Vulnerability: User-provided input rendered as HTML -->
         <a href="{{ url_for('delete', note_id=note.id) }}">Delete</a>
     </li>
     {% endfor %}
