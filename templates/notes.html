@@ -1,17 +1,26 @@
 {% extends 'index.html' %}
 {% block content %}
 <h2>Your Notes</h2>
-<form method="POST"> <!-- CSFR Vulnerability --> 
+
+<!-- XSS Vulnerability: Directly rendering unsanitized user input -->
+{% if greeting %}
+    <p>{{ greeting }}</p>
+{% endif %}
+
+<!-- CSRF Vulnerability: No CSRF token included -->
+<form method="POST">
     <textarea name="note" rows="3" placeholder="Write your note here..." required></textarea>
     <button type="submit">Add Note</button>
 </form>
 <ul>
     {% for note in notes %}
     <li>
-        {{ note.note | safe }}  <!-- XSS Vulnerability: User-provided input rendered as HTML -->
+        {{ note.note }} - {{ note.created_at }}
         <a href="{{ url_for('delete', note_id=note.id) }}">Delete</a>
     </li>
     {% endfor %}
 </ul>
+
+
 <a href="{{ url_for('logout') }}">Logout</a>
 {% endblock %}

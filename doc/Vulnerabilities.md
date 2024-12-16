@@ -5,7 +5,7 @@
 
 
 2. XSS Vulnerability
-**Location:** [templates/notes.html](/templates/notes.html#L10-13), when rendering user-provided notes.
+**Location:** [templates/notes.html](/templates/notes.html#L10-L13), when rendering user-provided notes.
 
 **Why It’s Vulnerable:** The |safe filter disables Jinja2’s auto-escaping, meaning user input could contain malicious HTML or JavaScript.
 
@@ -17,14 +17,12 @@
 
 
 4. Broken Access Control
-**Location:** [backend/routes.py](/backend/routes.py#L47-L51), inside the delete route.
+**Location:** [backend/database.py](/backend/database.py#L24-L28), in fetch_notes_by_user_id.
 
 **Why It’s Vulnerable:**
-No User Verification: There’s no check to ensure the note belongs to the currently logged-in user. Anyone can delete any note by providing its note_id.
-
-Open Endpoint: This makes the endpoint insecure because it allows unauthorized users to perform privileged actions (deleting notes) they shouldn’t have access to.
+No User Verification: Fetches all notes without verifying ownership.
 
 5. Cryptographic Failure
-**Location:** [backend/database.py](/backend/database.py#L5-L8), inside the insert_user function.
+**Location:** []() [backend/database.py](/backend/database.py#L5-L8), inside the insert_user function.
 
 **Why It’s Vulnerable:** The password is not hashed. Instead of using generate_password_hash from Werkzeug, it is assumed that the password is hashed but pass it as plaintext. This leads to storing plain passwords.
