@@ -1,6 +1,4 @@
-# Cyber-Security-Base-Project: Notes App
-
-# Flask Notes App (with OWASP Top 10 Vulnerabilities)
+# Cyber Security Base Project: Notes App
 
 This is a vulnerable Flask-based note-taking web application built for educational purposes. It intentionally contains **five OWASP Top 10 vulnerabilities** from the **OWASP 2021 list**, along with their fixes (commented out in code). The application uses raw SQL queries through SQLAlchemy and stores data in a relational database.
 
@@ -51,12 +49,17 @@ pip install -r requirements.txt
 ```
 
 ### 4. Create a .env File
+Generate and Add the Secret Key to the .env file:
 ```bash
-echo SECRET_KEY=your_secret_key > .env
+python3 -c "import secrets; print(f'SECRET_KEY={secrets.token_hex(64)}')" >> .env
+```
+Add Database URL to .env-file:
+```bash
 echo DATABASE_URL=sqlite:///your_db_name >> .env
 ```
 
 ### 5. Create a schema.sql File
+Create schema file:
 ```bash
 touch schema.sql
 ```
@@ -77,6 +80,10 @@ CREATE TABLE IF NOT EXISTS notes (
     note TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+```
+Create the Database:
+```bash
+psql -U postgres -d your_db_name < schema.sql
 ```
 
 ### 6. Create and Run init_db.py to Set Up Database
@@ -102,18 +109,16 @@ if __name__ == "__main__":
     run_schema()
     print("Database initialized.")
 ```
-
 Then run:
 ```bash
 python init_db.py
 ```
 
-7. Start the Application and Open browser
-start the app:
+### 7. Start the Application and Open browser
+Start the app:
 ```bash
 python app.py
 ```
-
 Open your browser:
 ```bash
 http://127.0.0.1:5000
