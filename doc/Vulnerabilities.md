@@ -4,7 +4,7 @@
 
 This project is a deliberately vulnerable Flask-based notes application built to demonstrate five real vulnerabilities from the OWASP Top 10 (2021). The goal was to not only implement these flaws but also provide working fixes that are commented out in the code. Screenshots demonstrating the before/after states are stored in the [doc/screenshots/](../doc/screenshots/) directory.
 
-The application includes user login, note creation and deletion, and a PostgreSQL-backed database. Below are the five vulnerabilities I implemented, why they are serious, where they occur in the codebase, and how they can be resolved.
+The application includes user login and deletition, note creation and deletion, and a PostgreSQL-backed database. Below are five intentionally implemented vulnerabilities, each explained in terms of its severity, its location in the codebase, and the steps required to fix it.
 
 ### Flaw 1: SQL Injection (OWASP A03 – Injection)
 
@@ -29,7 +29,7 @@ After the code is fixed, attempting the same SQL injection results in an “Inva
 
 ### Flaw 2: CSRF Vulnerability (OWASP A05 – Security Misconfiguration)
 
-**Location:** [templates/notes.html](/templates/notes.html#L9-L21), in the `form` for adding notes. [backend/routes.py](/backend/routes.py#L72-90), in the `/delete_user` route that handles the GET (normally POST) request.
+**Location:** [templates/notes.html](/templates/notes.html#L9-L21), in the `form` for adding notes. [backend/routes.py](/backend/routes.py#L72-L90), in the `/delete_user` route that handles the GET (normally POST) request.
 
 **What’s wrong:** The GET route for deleting a user (/delete_user/<int:user_id>) is exposed without requiring any authentication or CSRF protection. This means anyone, including unauthenticated attackers, can craft a malicious HTML page that silently sends deletion requests to the server using image tags. As a result, an attacker can mass-delete users without ever being logged in or having any valid session.
 
