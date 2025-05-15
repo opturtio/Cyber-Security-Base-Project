@@ -57,40 +57,16 @@ python3 -c "import secrets; print(f'SECRET_KEY={secrets.token_hex(64)}')" >> .en
 ```
 Add Database URL to .env-file:
 ```bash
-echo DATABASE_URL=sqlite:///your_db_name >> .env
+echo DATABASE_URL=postgresql:///your_db_name >> .env
 ```
 
-### 5. Create a schema.sql File
-Create schema file:
-```bash
-touch schema.sql
-```
-Then paste this into schema.sql:
-```bash
-DROP TABLE IF EXISTS notes CASCADE;
-DROP TABLE IF EXISTS users CASCADE;
-
-CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    username TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS notes (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    note TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
-
-### 6. Create Database
+### 5. Create Database
 Run this command to create the tables:
 ```bash
 psql -U postgres -d your_db_name < schema.sql
 ```
 
-### 7. Start the Application and Open browser
+### 6. Start the Application and Open browser
 Start the app:
 ```bash
 flask run
