@@ -125,7 +125,6 @@ After applying the fix, passwords are no longer stored in plaintext. This is con
 **Location:** [backend/routes.py](/backend/routes.py#L17-L22), in the `login()` function.
 
 **What’s wrong:** The login logic checks only whether a user with the submitted username exists, but does not verify the password at all. As a result, anyone who knows a valid username can log in without authentication.
-
 ```bash
 if user:
     session["user_id"] = user.id
@@ -145,4 +144,4 @@ As shown in the [screenshot](/doc/screenshots/flaw5-authentication-bypass-A07-af
 
 ### Summary
 
-This project demonstrates how five common web application vulnerabilities from the OWASP Top 10 (2021) can be introduced, and more importantly, how they can be effectively mitigated using secure coding practices in a minimal Flask application.  Each flaw is implemented in a functional context, such as login, note creation, or account management, and accompanied by a corresponding fix directly in the code. Before-and-after screenshots provide visual confirmation that the vulnerabilities are exploitable, and that the fixes successfully prevent abuse. All examples are based on small but common oversights: trusting user input, skipping validation, or omitting access controls. These subtle mistakes lead to serious risks like authentication bypass, SQL injection, or mass account deletion, all of which are explored and patched here. By walking through these flaws and their resolutions, the project not only strengthens the application but also builds developer awareness. Understanding how these issues arise, and how to fix them, is important for writing secure software in any environment.
+project demonstrates how five common web application vulnerabilities from the OWASP Top 10 (2021) can be introduced, and more importantly, how they can be effectively mitigated using secure coding practices in a minimal Flask application.  Each flaw is implemented in a functional context, such as login, note creation, or account management, and accompanied by a corresponding fix directly in the code. Before-and-after screenshots provide visual confirmation that the vulnerabilities are exploitable, and that the fixes successfully prevent abuse. All examples are based on small but common oversights: trusting user input, skipping validation, or omitting access controls. These subtle mistakes lead to serious risks like authentication bypass, SQL injection, or mass account deletion, all of which are explored and patched here. By walking through these flaws and their resolutions, the project not only strengthens the application but also builds developer awareness. Understanding how these issues arise, and how to fix them, is important for writing secure software in any environment.
