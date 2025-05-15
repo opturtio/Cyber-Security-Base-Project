@@ -122,7 +122,7 @@ After applying the fix, passwords are no longer stored in plaintext. This is con
 
 ### Flaw 5: Authentication Bypass (OWASP A07 – Identification and Authentication Failures)
 
-**Location:** [backend/routes.py](/backend/routes.py#L17-L29), in the `login()` function.
+**Location:** [backend/routes.py](/backend/routes.py#L17-L22), in the `login()` function.
 
 **What’s wrong:** The login logic checks only whether a user with the submitted username exists, but does not verify the password at all. As a result, anyone who knows a valid username can log in without authentication.
 
@@ -131,7 +131,7 @@ if user:
     session["user_id"] = user.id
 ```
 
-An attacker can gain access to any account simply by entering a valid username and adding any character as the password — without needing the correct credentials. As shown in this [screenshot](/doc/screenshots/flaw5-authentication-bypass-A07-before-1.png), the application does not verify the password at all, resulting in a complete authentication bypass.
+An attacker can gain access to any account simply by entering a valid username and adding any character as the password, without needing the correct credentials. As shown in this [screenshot](/doc/screenshots/flaw5-authentication-bypass-A07-before-1.png), the application does not verify the password at all, resulting in a complete authentication bypass.
 
 **How to fix it:** Use check_password_hash to compare the submitted password with the stored hashed version in the database:
 
