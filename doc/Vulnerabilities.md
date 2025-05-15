@@ -29,7 +29,7 @@ After the code is fixed, attempting the same SQL injection results in an “Inva
 
 ### Flaw 2: CSRF Vulnerability (OWASP A05 – Security Misconfiguration)
 
-**Location:** [templates/notes.html](/templates/notes.html#L9-L21), in the `form` for adding notes. [backend/routes.py](/backend/routes.py#L72-L90), in the `/delete_user` route that handles the GET (normally POST) request.
+**Location:** [templates/notes.html](/templates/notes.html#L9-L21), in the `form` for adding notes. [backend/routes.py](/backend/routes.py#L72-L87), in the `/delete_user` route that handles the GET (normally POST) request.
 
 **What’s wrong:** The GET route for deleting a user (/delete_user/<int:user_id>) is exposed without requiring any authentication or CSRF protection. This means anyone, including unauthenticated attackers, can craft a malicious HTML page that silently sends deletion requests to the server using image tags. As a result, an attacker can mass-delete users without ever being logged in or having any valid session.
 
