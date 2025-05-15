@@ -2,11 +2,11 @@
 
 **Repository link:** [Cyber-Security-Base-Project](https://github.com/opturtio/Cyber-Security-Base-Project)
 
-This project is a deliberately vulnerable Flask-based notes application built to demonstrate five real vulnerabilities from the OWASP Top 10 (2021). The goal was to not only implement these flaws but also provide working fixes that are commented out in the code. Screenshots demonstrating the before/after states are stored in the [doc/screenshots/](../doc/screenshots/) directory.
+This project is a deliberately vulnerable Flask-based notes application built to demonstrate five real vulnerabilities from the [OWASP Top 10 (2021)](https://owasp.org/www-project-top-ten/). The goal was to not only implement these flaws but also provide working fixes that are commented out in the code. Screenshots demonstrating the before/after states are stored in the [doc/screenshots/](../doc/screenshots/) directory.
 
 The application includes user login and deletition, note creation and deletion, and a PostgreSQL-backed database. Below are five intentionally implemented vulnerabilities, each explained in terms of its severity, its location in the codebase, and the steps required to fix it.
 
-### Flaw 1: SQL Injection (OWASP A03 – Injection)
+### Flaw 1: SQL Injection (OWASP A03:2021 – Injection)
 
 **Location:** [backend/database.py](/backend/database.py#L17-L26), in the `fetch_user_by_username` function.
 
@@ -16,7 +16,7 @@ The application includes user login and deletition, note creation and deletion, 
 sql = text(f"SELECT * FROM users WHERE username = '{username}'")
 ```
 
-This allows an attacker to enter a specially crafted input like ' OR 1=1 -- in the username field, which modifies the SQL logic to always return true. As a result, the attacker can bypass authentication without valid credentials. This vulnerability is demonstrated in [flaw1-sql-injection-A03-before-1](../doc/screenshots/flaw1-sql-injection-A03-before-1.png),  and the successful login bypass is shown in [flaw1-sql-injection-A03-before-2](../doc/screenshots/flaw1-sql-injection-A03-before-2.png).
+This allows an attacker to enter a input like `' OR 1=1 --` in the username field, which modifies the SQL logic to always return true. As a result, the attacker can bypass authentication without valid credentials. This vulnerability is demonstrated in [flaw1-sql-injection-A03-before-1](../doc/screenshots/flaw1-sql-injection-A03-before-1.png),  and the successful login bypass is shown in [flaw1-sql-injection-A03-before-2](../doc/screenshots/flaw1-sql-injection-A03-before-2.png).
 
 **How to fix it:** Use parameterized queries instead of string interpolation:
 
@@ -27,7 +27,7 @@ db.session.execute(sql, {"username": username})
 
 After the code is fixed, attempting the same SQL injection results in an “Invalid credentials” message, as shown in [flaw1-sql-injection-A03-after-1](../doc/screenshots/flaw1-sql-injection-A03-after-1.png). This confirms that the input is now correctly treated as data rather than executable SQL code.
 
-### Flaw 2: CSRF Vulnerability (OWASP A05 – Security Misconfiguration)
+### Flaw 2: CSRF Vulnerability (OWASP A05:2021 – Security Misconfiguration)
 
 **Location:** [templates/notes.html](/templates/notes.html#L9-L21), in the `form` for adding notes. [backend/routes.py](/backend/routes.py#L69-L87), in the `/delete_user` route that handles the GET (normally POST) request.
 
@@ -74,7 +74,7 @@ if not token or token != session.get("csrf_token"):
 This time  when the attacker uploads the malicious [html-file](../doc/screenshots/flaw2-csrf-vulnerability-A05-after-1.png) and attempts to delete user indexes from 1 to 15, the application successfully prevents the action. This confirms that the CSRF vulnerability has been mitigated. The result can be verified in the [database screenshot](../doc/screenshots/flaw2-csrf-vulnerability-A05-after-2.png), which shows that no unauthorized deletions occurred.
 This protection ensures that only legitimate, user-initiated requests can delete an account. Attackers cannot forge such requests unless they can guess the CSRF token, which is virtually impossible. Additionally, since POST requests from external origins cannot be automatically triggered by images, links, or simple HTML elements like `<img>` or `<a>`, using the POST method significantly reduces the risk of CSRF attacks.
 
-### Flaw 3: Broken Access Control (OWASP A01 – Broken Access Control)
+### Flaw 3: Broken Access Control (OWASP A01:2021 – Broken Access Control)
 
 **Location:** [backend/database.py](/backend/database.py#L37-L46), in the `fetch_notes_by_user_id` function.
 
@@ -94,7 +94,7 @@ sql = text("SELECT id, note, created_at FROM notes WHERE user_id = :user_id")
 
 Now, users can only view their own notes, as demonstrated in this [image](./screenshots/flaw3-broken-access-control-A01-after-1.png). This addresses a classic case of `insecure direct object reference`, one of the most common real-world issues in web apps.
 
-### Flaw 4: Cryptographic Failure (OWASP A02 – Cryptographic Failures)
+### Flaw 4: Cryptographic Failure (OWASP A02:2021 – Cryptographic Failures)
 
 **Location:** [backend/database.py](/backend/database.py#L5-L15) in the `signup()` function and [backend/routes.py](/backend/routes.py#L35-L42) in the `insert_user()` function.
 
@@ -120,7 +120,7 @@ def insert_user(username, hashed_password):
 
 After applying the fix, passwords are no longer stored in plaintext. This is confirmed in [flaw4-cryptographic-failure-A02-after-1](./screenshots/flaw4-cryptographic-failure-A02-after-1.png), which shows the hashed password stored in the database. This protects user credentials even if the database is compromised.
 
-### Flaw 5: Authentication Bypass (OWASP A07 – Identification and Authentication Failures)
+### Flaw 5: Authentication Bypass (OWASP A07:2021 – Identification and Authentication Failures)
 
 **Location:** [backend/routes.py](/backend/routes.py#L17-L22), in the `login()` function.
 
@@ -144,4 +144,4 @@ As shown in the [screenshot](/doc/screenshots/flaw5-authentication-bypass-A07-af
 
 ### Summary
 
-This project demonstrates how five common web application vulnerabilities from the OWASP Top 10 (2021) can be introduced, and more importantly, how they can be effectively mitigated using secure coding practices in a minimal Flask application.  Each flaw is implemented in a functional context, such as login, note creation, or account management, and accompanied by a corresponding fix directly in the code. Before-and-after screenshots provide visual confirmation that the vulnerabilities are exploitable, and that the fixes successfully prevent abuse. All examples are based on small but common oversights: trusting user input, skipping validation, or omitting access controls. These subtle mistakes lead to serious risks like authentication bypass, SQL injection, or mass account deletion, all of which are explored and patched here. By walking through these flaws and their resolutions, the project not only strengthens the application but also builds developer awareness. Understanding how these issues arise, and how to fix them, is important for writing secure software in any environment.
+This project demonstrates how five common web application vulnerabilities from the [OWASP Top 10 (2021)](https://owasp.org/www-project-top-ten/) can be introduced, and more importantly, how they can be effectively mitigated using secure coding practices in a minimal Flask application.  Each flaw is implemented in a functional context, such as login, note creation, or account management, and accompanied by a corresponding fix directly in the code. Before-and-after screenshots provide visual confirmation that the vulnerabilities are exploitable, and that the fixes successfully prevent abuse. All examples are based on small but common oversights: trusting user input, skipping validation, or omitting access controls. These subtle mistakes lead to serious risks like authentication bypass, SQL injection, or mass account deletion, all of which are explored and patched here. By walking through each flaw and fixing it, this project helps make the app more secure and gives developers a better understanding of how common security issues occure. Understanding how these issues arise, and how to fix them, is important for writing secure software in any environment.
