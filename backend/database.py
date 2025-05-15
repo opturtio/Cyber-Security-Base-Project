@@ -7,12 +7,12 @@ def insert_user(username, password):
     # Flaw 4: Cryptographic Failure - The password is stored in plaintext. It should be hashed before saving.
     sql = text("INSERT INTO users (username, password) VALUES (:username, :password)")
     db.session.execute(sql, {"username": username, "password": password})
-    db.session.commit()
     # HOW TO FIX:
     # Hash the password before inserting into the database
     # def insert_user(username, hashed_password):
     #     sql = text("INSERT INTO users (username, password) VALUES (:username, :password)")
     #     db.session.execute(sql, {"username": username, "password": hashed_password})
+    db.session.commit()
 
 def fetch_user_by_username(username):
     # OWASP A03: Injection
