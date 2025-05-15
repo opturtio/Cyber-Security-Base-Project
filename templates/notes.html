@@ -6,21 +6,19 @@
     <p>{{ greeting }}</p>
 {% endif %}
 
-<!-- OWASP A05: CSRF Protection Missing
-     CSRF Vulnerability – The form does not include a CSRF token,
-     allowing attackers to forge POST requests from another site. 
-     <form method="POST">
-        <textarea name="note" rows="3" placeholder="Write your note here..." required></textarea>
-        <button type="submit">Add Note</button>
-    </form>
-    -->
+<!-- OWASP A05: Security Misconfiguration
+     Flaw 2: CSRF Vulnerability – The form does not include a CSRF token,
+     allowing attackers to forge POST requests from another site. -->
+<form method="POST">
+    <textarea name="note" rows="3" placeholder="Write your note here..." required></textarea>
+    <button type="submit">Add Note</button>
+</form>
 <!-- HOW TO FIX:
--->
 <form method="POST">
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <textarea name="note" rows="3" placeholder="Write your note here..." required></textarea>
     <button type="submit">Add Note</button>
-</form>
+</form> -->
 
 <ul>
     {% for note in notes %}

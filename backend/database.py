@@ -4,7 +4,7 @@ from datetime import datetime
 
 def insert_user(username, password):
     # OWASP A02: Cryptographic Failure
-    # The password is stored in plaintext. It should be hashed before saving.
+    # Flaw 4: Cryptographic Failure - The password is stored in plaintext. It should be hashed before saving.
     sql = text("INSERT INTO users (username, password) VALUES (:username, :password)")
     db.session.execute(sql, {"username": username, "password": password})
     db.session.commit()
@@ -15,8 +15,8 @@ def insert_user(username, password):
     #     db.session.execute(sql, {"username": username, "password": hashed_password})
 
 def fetch_user_by_username(username):
-    # OWASP A03: Injection (SQL Injection)
-    # User input is concatenated directly into SQL query, which allows SQL injection.
+    # OWASP A03: Injection
+    # Flaw 1: SQL Injection - User input is concatenated directly into SQL query, which allows SQL injection.
     sql = text(f"SELECT * FROM users WHERE username = '{username}'")
     result = db.session.execute(sql)
     # HOW TO FIX:
@@ -36,7 +36,7 @@ def insert_note(user_id, note_content):
 
 def fetch_notes_by_user_id(user_id):
     # OWASP A01: Broken Access Control
-    # This function fetches all notes without restricting to the user's own notes.
+    # Flaw 3: Broken Access Control - This function fetches all notes without restricting to the user's own notes.
     sql = text("SELECT id, note, created_at FROM notes")
     result = db.session.execute(sql)
     # HOW TO FIX:
@@ -52,7 +52,7 @@ def delete_note(note_id, user_id):
     
 def delete_user_by_id(user_id):
     # OWASP A05: Security Misconfiguration
-    # CSRF Vulnerability – This function allows deleting any user without authentication or CSRF protection.
+    # Flaw 2: CSRF Vulnerability – This function allows deleting any user without authentication or CSRF protection.
     sql = text("DELETE FROM users WHERE id = :id")
     db.session.execute(sql, {"id": user_id})
     db.session.commit()
