@@ -29,7 +29,7 @@ After the code is fixed, attempting the same SQL injection results in an “Inva
 
 ### Flaw 2: CSRF Vulnerability (OWASP A05 – Security Misconfiguration)
 
-**Location:** [templates/notes.html](/templates/notes.html#L9-L21), in the `form` for adding notes. [backend/routes.py](/backend/routes.py#L72-L87), in the `/delete_user` route that handles the GET (normally POST) request.
+**Location:** [templates/notes.html](/templates/notes.html#L9-L21), in the `form` for adding notes. [backend/routes.py](/backend/routes.py#L69-L87), in the `/delete_user` route that handles the GET (normally POST) request.
 
 **What’s wrong:** The GET route for deleting a user (/delete_user/<int:user_id>) is exposed without requiring any authentication or CSRF protection. This means anyone, including unauthenticated attackers, can craft a malicious HTML page that silently sends deletion requests to the server using image tags. As a result, an attacker can mass-delete users without ever being logged in or having any valid session.
 
@@ -72,7 +72,7 @@ if not token or token != session.get("csrf_token"):
 ```
 
 This time  when the attacker uploads the malicious [html-file](../doc/screenshots/flaw2-csrf-vulnerability-A05-after-1.png) and attempts to delete user indexes from 1 to 15, the application successfully prevents the action. This confirms that the CSRF vulnerability has been mitigated. The result can be verified in the [database screenshot](../doc/screenshots/flaw2-csrf-vulnerability-A05-after-2.png), which shows that no unauthorized deletions occurred.
-This protection ensures that only legitimate, user-initiated requests can delete an account. Attackers cannot forge such requests unless they can guess the CSRF token, which is virtually impossible. Additionally, since POST requests from external origins cannot be automatically triggered by images, links, or simple HTML elements like <img> or <a>, using the POST method significantly reduces the risk of CSRF attacks.
+This protection ensures that only legitimate, user-initiated requests can delete an account. Attackers cannot forge such requests unless they can guess the CSRF token, which is virtually impossible. Additionally, since POST requests from external origins cannot be automatically triggered by images, links, or simple HTML elements like `&lt;img&gt;` or `&lt;a&gt;`, using the POST method significantly reduces the risk of CSRF attacks.
 
 ### Flaw 3: Broken Access Control (OWASP A01 – Broken Access Control)
 
