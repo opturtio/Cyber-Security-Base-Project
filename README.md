@@ -1,6 +1,6 @@
 # Cyber Security Base Project: Notes App
 
-This is a vulnerable Flask-based note-taking web application built for educational purposes. It intentionally contains **five OWASP Top 10 vulnerabilities** from the **OWASP 2021 list**, along with their fixes (commented out in code). The application uses raw SQL queries through SQLAlchemy and stores data in a relational database.
+This is a vulnerable Flask-based note-taking web application built for educational purposes. It intentionally contains **five OWASP Top 10 vulnerabilities** from the **OWASP 2021 list**, along with their fixes (commented out in code). The application uses raw SQL queries through SQLAlchemy and stores data in a relational database. Vulnerabilities are demonstrated [here](/doc/Vulnerabilities.md).
 
 ---
 
