@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
-from backend.database import insert_user, fetch_user_by_username, insert_note, fetch_notes_by_user_id, delete_note
+from backend.database import insert_user, fetch_user_by_username, insert_note, fetch_notes_by_user_id, delete_note, delete_user_by_id
 import secrets
 
 def configure_routes(app):
@@ -53,23 +53,11 @@ def configure_routes(app):
         if "user_id" not in session:
             return redirect(url_for("login"))
 
-        # OWASP A05: CSRF Protection Missing
-        # HOW TO FIX:
-        # Generate CSRF token
-        #if "csrf_token" not in session:
-        #    session["csrf_token"] = secrets.token_hex(16)
-
         user_id = session["user_id"]
         username = session.get("username", "Guest")
         notes = fetch_notes_by_user_id(user_id)
 
         if request.method == "POST":
-            # OWASP A05: CSRF Protection Missing
-            # HOW TO FIX:
-            # token = request.form.get("csrf_token")
-            # if not token or token != session["csrf_token"]:
-            #     return "CSRF token missing or invalid", 400
-
             note_content = request.form["note"]
             insert_note(user_id, note_content)
             return redirect(url_for("notes"))
@@ -85,6 +73,26 @@ def configure_routes(app):
         delete_note(note_id, user_id)
         return redirect(url_for("notes"))
 
+    @app.route("/delete_user/<int:user_id>", methods=["GET"])
+    def delete_user(user_id):
+        # OWASP A05: Security Misconfiguration
+        # CSRF Vulnerability – This route allows deletion of any user without CSRF protection or authentication.
+        delete_user_by_id(user_id)
+        return f"User {user_id} deleted"
+    # HOW TO FIX:
+    # Use POST and validate CSRF token
+    # @app.route("/delete_user/<int:user_id>", methods=["POST"])
+    # def delete_user(user_id):
+    #     if "user_id" not in session or session["user_id"] != user_id:
+    #         return "Unauthorized", 403
+    #
+    #     token = request.form.get("csrf_token")
+    #     if not token or token != session.get("csrf_token"):
+    #         return "Invalid CSRF token", 400
+    #
+    #     delete_user_by_id(user_id)
+    #     session.clear()
+    
     @app.route("/logout")
     def logout():
         session.clear()

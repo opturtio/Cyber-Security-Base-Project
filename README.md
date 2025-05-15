@@ -30,6 +30,8 @@ Fixes for all flaws are included in the code but **commented out**.
 
 ## Setup Instructions
 
+**Prerequisite: PostgreSQL must be installed and running on your system.**
+
 ### 1. Clone the Repository
 
 ```bash
@@ -81,43 +83,17 @@ CREATE TABLE IF NOT EXISTS notes (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
-Create the Database:
+
+### 6. Create Database
+Run this command to create the tables:
 ```bash
 psql -U postgres -d your_db_name < schema.sql
-```
-
-### 6. Create and Run init_db.py to Set Up Database
-Create init_db.py:
-```bash
-touch init_db.py
-```
-
-Paste this inside:
-```bash
-from db import db
-from sqlalchemy import text
-
-def run_schema():
-    with open("schema.sql") as f:
-        schema_sql = f.read()
-        for stmt in schema_sql.strip().split(";"):
-            if stmt.strip():
-                db.session.execute(text(stmt))
-        db.session.commit()
-
-if __name__ == "__main__":
-    run_schema()
-    print("Database initialized.")
-```
-Then run:
-```bash
-python init_db.py
 ```
 
 ### 7. Start the Application and Open browser
 Start the app:
 ```bash
-python app.py
+flask run
 ```
 Open your browser:
 ```bash

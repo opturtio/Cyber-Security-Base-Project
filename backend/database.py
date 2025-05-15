@@ -30,7 +30,7 @@ def insert_note(user_id, note_content):
     db.session.execute(sql, {
         "user_id": user_id,
         "note": note_content,
-        "created_at": datetime.utcnow()
+        "created_at": datetime.now().replace(microsecond=0)
     })
     db.session.commit()
 
@@ -49,3 +49,13 @@ def delete_note(note_id, user_id):
     sql = text("DELETE FROM notes WHERE id = :note_id AND user_id = :user_id")
     db.session.execute(sql, {"note_id": note_id, "user_id": user_id})
     db.session.commit()
+    
+def delete_user_by_id(user_id):
+    # OWASP A05: Security Misconfiguration
+    # CSRF Vulnerability – This function allows deleting any user without authentication or CSRF protection.
+    sql = text("DELETE FROM users WHERE id = :id")
+    db.session.execute(sql, {"id": user_id})
+    db.session.commit()
+    # HOW TO FIX:
+    # Only allow the authenticated user to delete their own account (check session in route)
+    # AND use CSRF protection to prevent forged requests.

