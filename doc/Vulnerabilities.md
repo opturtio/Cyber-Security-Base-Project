@@ -96,7 +96,7 @@ Now, users can only view their own notes, as demonstrated in this [image](./scre
 
 ### Flaw 4: Cryptographic Failure (OWASP A02 – Cryptographic Failures)
 
-**Location:** [backend/database.py](/backend/database.py#L5-L15) in the `signup()` function and [backend/routes.py](/backend/database.py#L38-L45) in the `insert_user()` function.
+**Location:** [backend/database.py](/backend/database.py#L5-L15) in the `signup()` function and [backend/routes.py](/backend/routes.py#L35-L42) in the `insert_user()` function.
 
 **What’s wrong:** When a user creates an account, as shown in this [screenshot](./screenshots/flaw4-cryptographic-failure-A02-before-1.png), their password is stored in plaintext in the database, as seen in the following [image](./screenshots/flaw4-cryptographic-failure-A02-before-2.png). This is a critical security flaw. If an attacker gains access to the database, they can immediately read and misuse user credentials without any effort.
 
